@@ -22,6 +22,13 @@ type BookSource struct {
 	Query string
 }
 
+// NewBookSource ...
+func NewBookSource() *BookSource {
+	return &BookSource{
+		URL: "https://www.googleapis.com/books/v1/volumes",
+	}
+}
+
 // Body ...
 func (b *BookSource) Body() ([]byte, error) {
 	url := fmt.Sprintf("%s?q=%s", b.URL, b.Query)

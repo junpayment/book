@@ -6,7 +6,9 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
-)
+	"encoding/json"
+	"github.com/junpayment/book/models"
+	)
 
 func TestIndex(t *testing.T) {
 	gin.SetMode(gin.TestMode)
@@ -14,10 +16,32 @@ func TestIndex(t *testing.T) {
 	w := httptest.NewRecorder()
 	_, r := gin.CreateTestContext(w)
 
-	r.GET("/", Index)
+	r.GET("/", Index) // set handler
 
-	req, _ := http.NewRequest("GET", "/", nil)
+	// request
+	req, _ := http.NewRequest("GET", "/" + "?query=東野圭吾" , nil)
 	r.ServeHTTP(w, req)
 
-	assert.Equal(t, "ok", w.Body.String())
+	// assert
+	b := &models.Book{}
+	err := json.Unmarshal(w.Body.Bytes(), b)
+	assert.IsType(t, nil, err)
+}
+
+func TestIndex_Error(t *testing.T) {
+	gin.SetMode(gin.TestMode)
+
+	w := httptest.NewRecorder()
+	_, r := gin.CreateTestContext(w)
+
+	r.GET("/", Index) // set handler
+
+	// request
+	req, _ := http.NewRequest("GET", "/" + "?query=東野圭吾" , nil)
+	r.ServeHTTP(w, req)
+
+	// assert
+	b := &models.Book{}
+	err := json.Unmarshal(w.Body.Bytes(), b)
+	assert.IsType(t, nil, err)
 }
