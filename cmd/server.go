@@ -1,33 +1,36 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
-	"net/http"
+  "github.com/gin-gonic/gin"
+  "github.com/junpayment/book/controllers/api/index"
+  "net/http"
 )
 
 func main() {
-	router := gin.Default()
+  GetEngine().Run(":8080")
+}
 
-	// health check
-	router.GET("/_ah/health", func(ctx *gin.Context) {
-		ctx.String(http.StatusOK, "ok")
-	})
+func GetEngine() *gin.Engine {
+  e := gin.Default()
 
-	// web
-	web := router.Group("/web")
-	{
-		web.GET("/", func(ctx *gin.Context) {
-			ctx.String(http.StatusOK, "ok")
-		})
-	}
+  // health check
+  e.GET("/_ah/health", func(ctx *gin.Context) {
+    ctx.String(http.StatusOK, "ok")
+  })
 
-	// api
-	api := router.Group("/api")
-	{
-		api.GET("/", func(ctx *gin.Context) {
-			ctx.String(http.StatusOK, "ok")
-		})
-	}
+  // web
+  web := e.Group("/web")
+  {
+    web.GET("/", func(ctx *gin.Context) {
+      ctx.String(http.StatusOK, "ok")
+    })
+  }
 
-	router.Run(":8080")
+  // api
+  api := e.Group("/api")
+  {
+    api.GET("/", index.Index)
+  }
+
+  return e
 }
